@@ -9,7 +9,7 @@
 		<title>AI Clinical Notes Automation System</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="static/css/main.css" />
+		<link rel="stylesheet" href="../static/css/main.css" />
 	</head>
 	<body class="is-preload">
 
@@ -25,26 +25,29 @@
 									<a href="/" class="logo"><strong>AI Clinical Notes Automation System</strong> by !Nerds</a>
 								</header>
 
-							<!-- Banner -->
-								<section id="banner">
-									<div class="content" id="recorder">
-										<header>
-											<h2>Record Your Patient Consultation</h2>
-											<p>AI consultations recording clinical notes</p>
-										</header>
-										<p>This AI-powered system records your patient consultation, analyzes the conversation in real time, and automatically generates accurate, structured clinical notes to help streamline documentation and improve clinical workflow.</p>
-										<ul class="actions">
-											<li><button class="button primary" id="recordBtn">Record</a></li>
-											<li><button class="button primary" id="stopBtn">Stop</a></li>
-											<li><button class="button primary" id="playBtn">Play</a></li>
-											<li><button class="button primary" id="uploadBtn">Upload</a></li>
-										</ul>
-										<audio id="audioPlayback" controls></audio>
-									</div>
-									<span class="image object">
-										<img src="static/images/pic10.jpg" alt="" />
-									</span>
-								</section>
+							<!-- Content -->
+								<section>
+									<header class="main">
+										<h2>Note Detail</h2>
+									</header>
+										<div class="table-wrapper">
+											<table>
+												<tr>
+													<th>Name</th>
+													<td>{{ note.p_name }}</td>
+												</tr>
+												<tr>
+													<th>Age</th>
+													<td>{{ note.age }}</td>
+												</tr>
+												<tr>
+													<th>Diagnosis</th>
+													<td>{{ note.diagnosis }}</td>
+												</tr>
+											</table>
+										</div>
+									</section>
+
 						</div>
 					</div>
 
@@ -57,9 +60,9 @@
 										<h2>Menu</h2>
 									</header>
 									<ul>
-										<li><a href="">Homepage</a></li>
-										<li><a href="notes">Notes</a></li>
-										<li><a href="elements">Elements</a></li>
+										<li><a href="../">Homepage</a></li>
+										<li><a href="../notes">Notes</a></li>
+										<li><a href="../elements">Elements</a></li>
 										<li>
 											<span class="opener">Submenu</span>
 											<ul>
@@ -82,11 +85,11 @@
 			</div>
 
 		<!-- Scripts -->
-			<script src="static/js/jquery.min.js"></script>
-			<script src="static/js/browser.min.js"></script>
-			<script src="static/js/breakpoints.min.js"></script>
-			<script src="static/js/util.js"></script>
-			<script src="static/js/main.js"></script>
-			<script src="static/recorder.js"></script>
+			<script src="../static/js/jquery.min.js"></script>
+			<script src="../static/js/browser.min.js"></script>
+			<script src="../static/js/breakpoints.min.js"></script>
+			<script src="../static/js/util.js"></script>
+			<script src="../static/js/main.js"></script>
+
 	</body>
 </html>

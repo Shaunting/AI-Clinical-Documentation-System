@@ -1,6 +1,7 @@
 import os
 import uuid
 import json
+import pymysql
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory, flash
 
@@ -60,6 +61,15 @@ def extract_structure_from_transcript(transcript):
     }
     return structure
 
+def get_db_connection():
+    return pymysql.connect(
+        host="localhost",
+        user="root",
+        password="12345678",
+        database="clinic",
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
 # ---------- 라우트 ----------
 @app.route("/")
 def index():
@@ -69,9 +79,37 @@ def index():
 def elements():
     return render_template("elements.html")
 
-@app.route("/generic")
-def generic():
-    return render_template("generic.html")
+@app.route("/notes")
+def notes():
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT id, p_name, age, diagnosis FROM notes")
+        notes_list = cursor.fetchall()
+    conn.close()
+    return render_template("notes.html", notes=notes_list)
+
+@app.route("/note/<int:note_id>")
+def note_detail(note_id):
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM notes WHERE id = %s", (note_id,))
+        note = cursor.fetchone()
+    conn.close()
+
+    if not note:
+        return "Note not found", 404
+
+    return render_template("note.html", note=note)
+
+def upload_notes(p_name, age, diagnosis):
+    try:
+        conn = get_db_connection()
+        sql = "INSERT INTO notes (p_name, age, diagnosis) VALUES (%s, %s, %s)"
+        conn.cursor.execute(sql, (p_name, age, diagnosis))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print(f"Error uploading notes: {e}")
 
 @app.route("/upload", methods=["POST"])
 def upload_audio():
