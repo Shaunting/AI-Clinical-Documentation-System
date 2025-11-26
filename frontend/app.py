@@ -72,7 +72,6 @@ def elements():
 def notes():
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        # cursor.execute("SELECT id, p_name, age, diagnosis FROM notes")
         cursor.execute("""
             SELECT v.id, pi.age, pi.sex,
                 (SELECT a.date FROM admissions a WHERE a.visit_id = v.id ORDER BY a.date DESC LIMIT 1) AS latest_admission_date,
@@ -90,7 +89,6 @@ def notes():
 def note_detail(visit_id):
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        # cursor.execute("SELECT * FROM notes WHERE id = %s", (note_id,))
         cursor.execute("SELECT * FROM visits WHERE id=%s", (visit_id,))
         visit = cursor.fetchone()
 
