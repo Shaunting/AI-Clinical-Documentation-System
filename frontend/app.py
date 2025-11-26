@@ -72,23 +72,56 @@ def elements():
 def notes():
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT id, p_name, age, diagnosis FROM notes")
+        # cursor.execute("SELECT id, p_name, age, diagnosis FROM notes")
+        cursor.execute("""
+            SELECT v.id, pi.age, pi.sex,
+                (SELECT a.date FROM admissions a WHERE a.visit_id = v.id ORDER BY a.date DESC LIMIT 1) AS latest_admission_date,
+                (SELECT t.related_condition FROM treatments t WHERE t.visit_id = v.id LIMIT 1) AS primary_diagnosis
+            FROM visits v
+            LEFT JOIN patient_information pi ON v.id = pi.visit_id
+            ORDER BY v.id ASC;
+        """)
         notes_list = cursor.fetchall()
+        print(notes_list)
     conn.close()
     return render_template("notes.html", notes=notes_list)
 
-@app.route("/note/<int:note_id>")
-def note_detail(note_id):
+@app.route("/note/<int:visit_id>")
+def note_detail(visit_id):
     conn = get_db_connection()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM notes WHERE id = %s", (note_id,))
-        note = cursor.fetchone()
+        # cursor.execute("SELECT * FROM notes WHERE id = %s", (note_id,))
+        cursor.execute("SELECT * FROM visits WHERE id=%s", (visit_id,))
+        visit = cursor.fetchone()
+
+        # patient info
+        cursor.execute("SELECT * FROM patient_information WHERE visit_id=%s", (visit_id,))
+        patient_info = cursor.fetchone()
+
+        # admissions
+        cursor.execute("SELECT * FROM admissions WHERE visit_id=%s", (visit_id,))
+        admissions = cursor.fetchall()
+
+        # symptoms
+        cursor.execute("SELECT * FROM symptoms WHERE visit_id=%s", (visit_id,))
+        symptoms = cursor.fetchall()
+
+        # treatments
+        cursor.execute("SELECT * FROM treatments WHERE visit_id=%s", (visit_id,))
+        treatments = cursor.fetchall()
+
+        # discharge
+        cursor.execute("SELECT * FROM discharges WHERE visit_id=%s", (visit_id,))
+        discharge = cursor.fetchone()
     conn.close()
 
-    if not note:
-        return "Note not found", 404
-
-    return render_template("note.html", note=note)
+    return render_template("note.html",
+                           visit=visit,
+                           patient_info=patient_info,
+                           admissions=admissions,
+                           symptoms=symptoms,
+                           treatments=treatments,
+                           discharge=discharge)
 
 def upload_notes(p_name, age, diagnosis):
     try:

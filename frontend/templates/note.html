@@ -31,19 +31,76 @@
 										<h2>Note Detail</h2>
 									</header>
 										<div class="table-wrapper">
-											<table>
+											<h3>Patient Information</h3>
+											<table cellpadding="6">
+												<tr><th>Age</th><td>{{ patient_info.age }}</td></tr>
+												<tr><th>Sex</th><td>{{ patient_info.sex }}</td></tr>
+											</table>
+
+											<h3>Admissions</h3>
+											<table cellpadding="6">
+												<tr>
+													<th>Reason</th>
+													<th>Date</th>
+													<th>Duration</th>
+													<th>Care Center</th>
+												</tr>
+												{% for a in admissions %}
+												<tr>
+													<td>{{ a.reason }}</td>
+													<td>{{ a.date }}</td>
+													<td>{{ a.duration }}</td>
+													<td>{{ a.care_center_details }}</td>
+												</tr>
+												{% endfor %}
+											</table>
+
+											<h3>Symptoms</h3>
+											<table cellpadding="6">
 												<tr>
 													<th>Name</th>
-													<td>{{ note.p_name }}</td>
+													<th>Intensity</th>
+													<th>Location</th>
+													<th>Time</th>
+													<th>Trigger</th>
 												</tr>
+												{% for s in symptoms %}
 												<tr>
-													<th>Age</th>
-													<td>{{ note.age }}</td>
+													<td>{{ s.name_of_symptom }}</td>
+													<td>{{ s.intensity }}</td>
+													<td>{{ s.location }}</td>
+													<td>{{ s.time }}</td>
+													<td>{{ s.behaviours_affecting }}</td>
 												</tr>
+												{% endfor %}
+											</table>
+
+											<h3>Treatments</h3>
+											<table cellpadding="6">
 												<tr>
-													<th>Diagnosis</th>
-													<td>{{ note.diagnosis }}</td>
+													<th>Name</th>
+													<th>Condition</th>
+													<th>Dosage</th>
+													<th>Frequency</th>
+													<th>Reaction</th>
 												</tr>
+												{% for t in treatments %}
+												<tr>
+													<td>{{ t.name }}</td>
+													<td>{{ t.related_condition }}</td>
+													<td>{{ t.dosage }}</td>
+													<td>{{ t.frequency }}</td>
+													<td>{{ t.reaction_to_treatment }}</td>
+												</tr>
+												{% endfor %}
+											</table>
+
+											<h3>Discharge</h3>
+											<table cellpadding="6">
+												<tr><th>Reason</th><td>{{ discharge.reason }}</td></tr>
+												<tr><th>Referral</th><td>{{ discharge.referral }}</td></tr>
+												<tr><th>Follow Up</th><td>{{ discharge.follow_up }}</td></tr>
+												<tr><th>Summary</th><td>{{ discharge.discharge_summary }}</td></tr>
 											</table>
 										</div>
 									</section>

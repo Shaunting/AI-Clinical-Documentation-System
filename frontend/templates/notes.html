@@ -34,17 +34,21 @@
 											<table>
 												<thead>
 													<tr>
-														<th>Name</th>
+														<th>ID</th>
 														<th>Age</th>
-														<th>Diagnosis</th>
+														<th>Sex</th>
+														<th>Latest Admission</th>
+														<th>Primary Diagnosis</th>
 													</tr>
 												</thead>
 												<tbody>
 													{% for note in notes %}
-													<tr style="cursor: pointer;" onclick="window.location.href='/note/{{ note.id }}'">
-														<td>{{ note.p_name }}</td>
+													<tr onclick="location.href='/note/{{ note.id }}'" style="cursor:pointer;">
+														<td>{{ note.id }}</td>
 														<td>{{ note.age }}</td>
-														<td style="overflow: hidden;">{{ note.diagnosis }}</td>
+														<td>{{ note.sex }}</td>
+														<td>{{ note.latest_admission_date }}</td>
+														<td>{{ note.primary_diagnosis }}</td>
 													</tr>
 													{% endfor %}
 												</tbody>
