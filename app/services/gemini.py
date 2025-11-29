@@ -2,9 +2,8 @@ from google import genai
 from google.genai import types
 import os, json
 
-
 # -----------------------------------------------------------
-# Configure GEMINI
+# GEMINI CLIENT
 # -----------------------------------------------------------
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -165,53 +164,54 @@ config = types.GenerateContentConfig(
 
 
 # -----------------------------------------------------------
-# Input transcript in prompt
+# MAIN FUNCTION (this is what routes call)
 # -----------------------------------------------------------
-transcript = """Doctor: Good morning, what brings you to the Outpatient department today?
-Patient: Good morning doctor, I have some discomfort in my neck and lower back, and I'm not able to maintain an erect posture.
-Doctor: Hmm, okay. Can you tell me more about the discomfort?
-Patient: Yes, I tend to fall on either side when I stand up from a sitting position, and my head is always turned to the right and upwards.
-Doctor: I see. Are you experiencing any pain in your neck?
-Patient: Yes, I have pain and discomfort in my neck.
-Doctor: Okay. And what about your back?
-Patient: There is a sideways bending in my lumbar region. To counter the abnormal positioning of my back and neck, I have to keep my limbs in a specific position to allow my body weight to be supported.
-Doctor: I understand. Does this restriction of body movements affect your daily life?
-Patient: Yes, I need assistance in standing and walking, and my parents have to help me with my daily chores, including all activities of self-care.
-Doctor: I see. How long have you been experiencing these difficulties?
-Patient: I've been experiencing these difficulties for the past four months since I was introduced to olanzapine tablets for the control of my exacerbated mental illness.
-Doctor: I see. And you've been diagnosed with bipolar affective disorder, correct?
-Patient: Yes, I was diagnosed with bipolar affective disorder seven years ago.
-Doctor: And you've been taking olanzapine for your mental illness for seven years, correct?
-Patient: Yes, I have. My first episode of the affective disorder was mania when I was eleven, and I've been taking olanzapine tablets in 2.5-10 mg doses per day at different times.
-Doctor: I see. So, you developed pain and discomfort in your neck within the second week of being put on olanzapine at a dose of 5 mg per day, correct?
-Patient: Yes, that's correct. The sustained and abnormal contraction of my neck muscles pulls my head to the right in an upward direction.
-Doctor: I see. And these features have persisted for the first three years of your illness with a varying intensity, distress, and dysfunction, correct?
-Patient: Yes, that's correct. The intensity, distress, and dysfunction tend to correlate with the dose of olanzapine.
-Doctor: I see. And apart from a brief period of around three weeks when you were given trihexyphenidyl 4 mg per day for rigidity in your upper limbs, you were not prescribed any other psychotropic medication, correct?
-Patient: Yes, that's correct. The rigidity showed good response to trihexyphenidyl 4 mg per day.
-Doctor: Okay. I'm going to order some tests for you, and I'll be able to give you a proper diagnosis after that.
-Patient: Okay, doctor. 
-Doctor: I'll also instruct you on follow-up requirements.
-Patient: Okay, thank you, doctor."""
+def generate_structured_summary(transcript: str):
+    """
+    Takes a transcript string and returns structured JSON from Gemini.
+    """
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=(
+            "Use the function `generate_structured_clinical_summary` to extract "
+            "structured clinical notes from the transcript below. "
+            "Return only as a function call.\n\n"
+            f"{transcript}"
+        ),
+        config=config,
+    )
+
+    candidate = response.candidates[0].content.parts[0]
+
+    if hasattr(candidate, "function_call") and candidate.function_call:
+        fn = candidate.function_call
+        return {
+            "function": fn.name,
+            "structured_output": fn.args,
+            "status": "success",
+        }
+
+    return {
+        "status": "no_function_call",
+        "raw_output": response.text,
+    }
 
 
-# -----------------------------------------------------------
-# Response: Ask ChatGPT
-# -----------------------------------------------------------
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=(
-        "Use the function `generate_structured_clinical_summary` to extract structured clinical notes "
-        "from the transcript below. Return only as a function call, not as text.\n\n"
-        f"{transcript}"
-    ),
-    config=config,
-)
+# response = client.models.generate_content(
+#     model="gemini-2.5-flash",
+#     contents=(
+#         "Use the function `generate_structured_clinical_summary` to extract structured clinical notes "
+#         "from the transcript below. Return only as a function call, not as text.\n\n"
+#         f"{transcript}"
+#     ),
+#     config=config,
+# )
 
-if response.candidates[0].content.parts[0].function_call:
-    fn = response.candidates[0].content.parts[0].function_call
-    print(f"Function called: {fn.name}")
-    print(json.dumps(fn.args, indent=2))
-else:
-    print("No function call detected.")
-    print(response.text)
+# if response.candidates[0].content.parts[0].function_call:
+#     fn = response.candidates[0].content.parts[0].function_call
+#     print(f"Function called: {fn.name}")
+#     print(json.dumps(fn.args, indent=2))
+# else:
+#     print("No function call detected.")
+#     print(response.text)
