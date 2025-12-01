@@ -13,8 +13,10 @@ def create_app():
 
     from .routes.web_routes import bp as web_bp
     from .routes.pipeline_routes import bp as pipeline_bp
+    from .routes.notes_routes import bp as notes_bp
 
     app.register_blueprint(web_bp)
     app.register_blueprint(pipeline_bp)
+    app.register_blueprint(notes_bp)
 
     return app
