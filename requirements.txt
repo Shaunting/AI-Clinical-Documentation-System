@@ -1,3 +1,6 @@
 Flask>=2.0
 python-dotenv
 pymysql
+google-generativeai
+requests
+psycopg2-binary

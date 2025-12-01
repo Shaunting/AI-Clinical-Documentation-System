@@ -21,7 +21,6 @@ def get_conn():
 # Insert conversation
 # --------------------------------------------------------
 def insert_conversation(transcript: str) -> int:
-    print("insert_conversation() called")
     sql = """
         INSERT INTO conversation (raw_text)
         VALUES (%s)
@@ -29,20 +28,12 @@ def insert_conversation(transcript: str) -> int:
     """
 
     conn = get_conn()
-    print("Got connection")
-
     with conn:
-        print("Entered connection context")
-
         with conn.cursor() as cur:
-            print("Executing SQL insert for conversation…")
             cur.execute(sql, (transcript,))
             row = cur.fetchone()
-            print("Conversation insert returned:", row)
 
     conn.close()
-    print("Connection closed")
-
     return row["conversation_id"]
 
 
