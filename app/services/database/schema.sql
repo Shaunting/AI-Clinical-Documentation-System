@@ -3,6 +3,19 @@ CREATE TABLE visits (
     visit_motivation TEXT
 );
 
+CREATE TABLE conversation_summary (
+    summary_id      SERIAL PRIMARY KEY,
+    
+    conversation_id INTEGER NOT NULL
+        REFERENCES conversation(conversation_id)
+        ON DELETE CASCADE,
+    
+    summary_text    TEXT NOT NULL,
+    
+    created_at      TIMESTAMP DEFAULT NOW()
+);
+
+
 -- CREATE TABLE admissions (
 --     id INT AUTO_INCREMENT PRIMARY KEY,
 --     visit_id INT,

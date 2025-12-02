@@ -106,7 +106,7 @@ generate_summary_function = {
 
 tools = types.Tool(function_declarations=[generate_summary_function])
 
-config = types.GenerateContentConfig(
+structured_config = types.GenerateContentConfig(
     tools=[tools],
     tool_config=types.ToolConfig(
         function_calling_config=types.FunctionCallingConfig(
@@ -118,7 +118,7 @@ config = types.GenerateContentConfig(
 
 
 # -----------------------------------------------------------
-# MAIN FUNCTION (this is what routes call)
+# GEMINI - Generate Structured Summary
 # -----------------------------------------------------------
 def generate_structured_summary(transcript: str):
     """
@@ -133,7 +133,7 @@ def generate_structured_summary(transcript: str):
             "Return only as a function call.\n\n"
             f"{transcript}"
         ),
-        config=config,
+        config=structured_config,
     )
 
     candidate = response.candidates[0].content.parts[0]
@@ -154,159 +154,49 @@ def generate_structured_summary(transcript: str):
     }
 
 
-# response = client.models.generate_content(
-#     model="gemini-2.5-flash",
-#     contents=(
-#         "Use the function `generate_structured_clinical_summary` to extract structured clinical notes "
-#         "from the transcript below. Return only as a function call, not as text.\n\n"
-#         f"{transcript}"
-#     ),
-#     config=config,
-# )
+# -----------------------------------------------------------
+# GEMINI - Generate Summary
+# -----------------------------------------------------------
 
-# if response.candidates[0].content.parts[0].function_call:
-#     fn = response.candidates[0].content.parts[0].function_call
-#     print(f"Function called: {fn.name}")
-#     print(json.dumps(fn.args, indent=2))
-# else:
-#     print("No function call detected.")
-#     print(response.text)
+summary_config = types.GenerateContentConfig(
+    temperature=0.4,
+)
 
 
-# generate_summary_function = {
-#     "name": "generate_structured_clinical_summary",
-#     "description": "Extract and structure a doctor-patient transcript into a JSON medical summary for EHR documentation.",
-#     "parameters": {
-#         "type": "object",
-#         "properties": {
-#             "visit motivation": {"type": "string"},
-#             "admission": {
-#                 "type": "array",
-#                 "items": {
-#                     "type": "object",
-#                     "properties": {
-#                         "reason": {"type": "string"},
-#                         "date": {"type": "string"},
-#                         "duration": {"type": "string"},
-#                         "care center details": {"type": "string"},
-#                     },
-#                 },
-#             },
-#             "patient information": {
-#                 "type": "object",
-#                 "properties": {
-#                     "age": {"type": "string"},
-#                     "sex": {"type": "string"},
-#                     "ethnicity": {"type": "string"},
-#                     "weight": {"type": "string"},
-#                     "height": {"type": "string"},
-#                     "family medical history": {"type": "string"},
-#                     "recent travels": {"type": "string"},
-#                     "socio economic context": {"type": "string"},
-#                     "occupation": {"type": "string"},
-#                 },
-#             },
-#             "patient medical history": {
-#                 "type": "object",
-#                 "properties": {
-#                     "physiological context": {"type": "string"},
-#                     "psychological context": {"type": "string"},
-#                     "vaccination history": {"type": "string"},
-#                     "allergies": {"type": "string"},
-#                     "exercise frequency": {"type": "string"},
-#                     "nutrition": {"type": "string"},
-#                     "sexual history": {"type": "string"},
-#                     "alcohol consumption": {"type": "string"},
-#                     "drug usage": {"type": "string"},
-#                     "smoking status": {"type": "string"},
-#                 },
-#             },
-#             "surgeries": {
-#                 "type": "array",
-#                 "items": {
-#                     "type": "object",
-#                     "properties": {
-#                         "reason": {"type": "string"},
-#                         "Type": {"type": "string"},
-#                         "time": {"type": "string"},
-#                         "outcome": {"type": "string"},
-#                         "details": {"type": "string"},
-#                     },
-#                 },
-#             },
-#             "symptoms": {
-#                 "type": "array",
-#                 "items": {
-#                     "type": "object",
-#                     "properties": {
-#                         "name of symptom": {"type": "string"},
-#                         "intensity of symptom": {"type": "string"},
-#                         "location": {"type": "string"},
-#                         "time": {"type": "string"},
-#                         "temporalisation": {"type": "string"},
-#                         "behaviours affecting the symptom": {"type": "string"},
-#                         "details": {"type": "string"},
-#                     },
-#                 },
-#             },
-#             "medical examinations": {
-#                 "type": "array",
-#                 "items": {
-#                     "type": "object",
-#                     "properties": {
-#                         "name": {"type": "string"},
-#                         "result": {"type": "string"},
-#                         "details": {"type": "string"},
-#                     },
-#                 },
-#             },
-#             "diagnosis tests": {
-#                 "type": "array",
-#                 "items": {
-#                     "type": "object",
-#                     "properties": {
-#                         "test": {"type": "string"},
-#                         "severity": {"type": "string"},
-#                         "result": {"type": "string"},
-#                         "condition": {"type": "string"},
-#                         "time": {"type": "string"},
-#                         "details": {"type": "string"},
-#                     },
-#                 },
-#             },
-#             "treatments": {
-#                 "type": "array",
-#                 "items": {
-#                     "type": "object",
-#                     "properties": {
-#                         "name": {"type": "string"},
-#                         "related condition": {"type": "string"},
-#                         "dosage": {"type": "string"},
-#                         "time": {"type": "string"},
-#                         "frequency": {"type": "string"},
-#                         "duration": {"type": "string"},
-#                         "reason for taking": {"type": "string"},
-#                         "reaction to treatment": {"type": "string"},
-#                         "details": {"type": "string"},
-#                     },
-#                 },
-#             },
-#             "discharge": {
-#                 "type": "object",
-#                 "properties": {
-#                     "reason": {"type": "string"},
-#                     "referral": {"type": "string"},
-#                     "follow up": {"type": "string"},
-#                     "discharge summary": {"type": "string"},
-#                 },
-#             },
-#         },
-#         "required": [
-#             "visit motivation",
-#             "patient information",
-#             "patient medical history",
-#             "symptoms",
-#             "treatments",
-#         ],
-#     },
-# }
+def generate_summary(transcript: str):
+    """
+    Generate a concise clinical summary tailored for medical documentation.
+    Provides an 80 to 120-word paragraph capturing key medical details.
+    """
+
+    prompt = (
+        "Write a concise clinical summary (80 to 120 words) based on the transcript below. "
+        "Summarize the patient's chief complaint, symptom characteristics, duration, "
+        "medication history, and functional impact. "
+        "Do not add information not present in the transcript. "
+        "Use clear medical language appropriate for EHR documentation. "
+        "Return a single paragraph only.\n\n"
+        f"Transcript:\n{transcript}"
+    )
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=summary_config,
+    )
+
+    # Prefer response.text
+    summary = getattr(response, "text", None)
+
+    # Fallback: scrape text from parts
+    if not summary:
+        parts = response.candidates[0].content.parts
+        for part in parts:
+            if hasattr(part, "text"):
+                summary = part.text
+                break
+
+    return {
+        "status": "success",
+        "summary": summary or "",
+    }

@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify
-from app.services.gemini import generate_structured_summary
+from app.services.gemini import generate_structured_summary, generate_summary
 from app.services.db_service import (
     insert_raw_summary,
     insert_normalize_summary,
     insert_conversation,
+    insert_conversation_summary,
 )
 
 
@@ -88,8 +89,8 @@ Okay, thank you.
 # -----------------------------------------------------------
 # Input transcript in prompt
 # -----------------------------------------------------------
-@bp.route("/generate", methods=["GET"])
-def generate_summary_route():
+@bp.route("/generate_json", methods=["GET"])
+def generate_json_route():
     transcript = transcript_no_roles
 
     result = generate_structured_summary(transcript)
@@ -97,42 +98,13 @@ def generate_summary_route():
     return jsonify(result)
 
 
-# @bp.route("/process", methods=["POST", "GET"])
-# def pipeline_process():
-#     # -----------------------------------------
-#     # 1. Voice to transcript(text)
-#     # -----------------------------------------
-#     transcript = test_transcript
+@bp.route("/generate_summary", methods=["GET"])
+def generate_summary_route():
+    transcript = transcript_no_roles
 
-#     # -----------------------------------------
-#     # 2. Voice to transcript(text)
-#     # -----------------------------------------
-#     conversation = insert_conversation(transcript)
+    result = generate_summary(transcript)
 
-#     # -----------------------------------------
-#     # 3. Generate structured summary JSON
-#     # -----------------------------------------
-#     structured_json = generate_structured_summary(transcript)
-
-#     # -----------------------------------------
-#     # 4. Insert raw summary record into Postgres
-#     # -----------------------------------------
-
-#     summary_id = insert_raw_summary(
-#         conversation_id=conversation,
-#         transcript=transcript,
-#         structured_json=structured_json,
-#     )
-
-#     # -----------------------------------------
-#     # 4. Insert normalized table records into Postgres
-#     # -----------------------------------------
-
-#     normalized = insert_normalize_summary(pool, conversation, transcript_text, structured_json)
-#     # Return to client
-#     return jsonify(
-#         {"success": True, "summary_id": summary_id, "structured_json": structured_json}
-#     )
+    return result
 
 
 @bp.route("/process", methods=["POST", "GET"])
@@ -140,7 +112,7 @@ def pipeline_process():
     # -----------------------------------------
     # 1. Voice to transcript(text)
     # -----------------------------------------
-    transcript = test_transcript
+    transcript = transcript_no_roles
 
     # -----------------------------------------
     # 2. Insert conversation into database
@@ -149,9 +121,18 @@ def pipeline_process():
     conversation_id = insert_conversation(transcript)
 
     # -----------------------------------------
+    # 3. Generate summary for conversation
+    # -----------------------------------------
+    print("generating conversation summary ............")
+    summary = generate_summary(transcript)
+
+    print("inserting conversation summary ............")
+    summary_id = insert_conversation_summary(conversation_id, summary)
+
+    # -----------------------------------------
     # 3. Generate structured json summary
     # -----------------------------------------
-    print("structured to json summary............")
+    print("genrating structured to json summary............")
     structured_json = generate_structured_summary(transcript)
 
     # -----------------------------------------
@@ -177,6 +158,7 @@ def pipeline_process():
         {
             "success": True,
             "conversation_id": conversation_id,
+            "summary_id": summary_id,
             "structured_id": structured_id,
             "normalized": normalized,
         }

@@ -38,6 +38,29 @@ def insert_conversation(transcript: str) -> int:
 
 
 # --------------------------------------------------------
+# Insert conversation
+# --------------------------------------------------------
+def insert_conversation_summary(conversation_id: int, summary: str) -> int:
+    if isinstance(summary, dict):
+        summary = summary.get("summary", "")
+
+    sql = """
+        INSERT INTO conversation_summary (conversation_id, summary_text)
+        VALUES (%s, %s)
+        RETURNING summary_id;
+    """
+
+    conn = get_conn()
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, (conversation_id, summary))
+            row = cur.fetchone()
+
+    conn.close()
+    return row["summary_id"]
+
+
+# --------------------------------------------------------
 # Insert raw summary JSON
 # --------------------------------------------------------
 def insert_raw_summary(
