@@ -31,22 +31,49 @@ def notes():
 def note_detail(visit_id):
     conn = get_conn()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM visit WHERE visit_id=%s", (visit_id,))
+        # 1. Visit
+        cursor.execute("SELECT * FROM visit WHERE visit_id = %s", (visit_id,))
         visit = cursor.fetchone()
 
-        cursor.execute(
-            "SELECT * FROM patient_information WHERE visit_id=%s", (visit_id,)
-        )
+        # 2. Patient
+        cursor.execute("SELECT * FROM patient WHERE patient_id = %s", 
+                       (visit['patient_id'],))
         patient_info = cursor.fetchone()
 
-        cursor.execute("SELECT * FROM symptoms WHERE visit_id=%s", (visit_id,))
+        # 3. Patient Medical History
+        cursor.execute("SELECT * FROM patient_medical_history WHERE patient_id = %s",
+                       (visit['patient_id'],))
+        medical_history = cursor.fetchone()
+
+        # 4. Surgeries
+        cursor.execute("SELECT * FROM surgeries WHERE patient_id = %s",
+                       (visit['patient_id'],))
+        surgeries_list = cursor.fetchall()
+
+        # 5. Symptoms
+        cursor.execute("SELECT * FROM symptoms WHERE visit_id = %s",
+                       (visit_id,))
         symptoms = cursor.fetchall()
 
-        cursor.execute("SELECT * FROM treatments WHERE visit_id=%s", (visit_id,))
+        # 6. Treatments
+        cursor.execute("SELECT * FROM treatments WHERE visit_id = %s",
+                       (visit_id,))
         treatments = cursor.fetchall()
 
-        cursor.execute("SELECT * FROM discharges WHERE visit_id=%s", (visit_id,))
-        discharge = cursor.fetchone()
+        # 7. Conversation Raw
+        cursor.execute("SELECT * FROM conversation WHERE conversation_id = %s",
+                       (visit['conversation_id'],))
+        conversation = cursor.fetchone()
+
+        # 8. Structured Summary Raw
+        cursor.execute("SELECT * FROM structured_summary_raw WHERE conversation_id = %s",
+                       (visit['conversation_id'],))
+        structured_summary = cursor.fetchone()
+
+        # 9. Final Summary
+        cursor.execute("SELECT * FROM conversation_summary WHERE conversation_id = %s",
+                       (visit['conversation_id'],))
+        final_summary = cursor.fetchone()
 
     conn.close()
 
@@ -54,7 +81,11 @@ def note_detail(visit_id):
         "note.html",
         visit=visit,
         patient_info=patient_info,
+        medical_history=medical_history,
+        surgeries=surgeries_list,
         symptoms=symptoms,
         treatments=treatments,
-        discharge=discharge,
+        conversation=conversation,
+        structured_summary=structured_summary,
+        final_summary=final_summary,
     )

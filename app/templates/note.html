@@ -14,112 +14,130 @@
 	<body class="is-preload">
 
 		<!-- Wrapper -->
-			<div id="wrapper">
+		<div id="wrapper">
 
-				<!-- Main -->
-					<div id="main">
-						<div class="inner">
+			<!-- Main -->
+			<div id="main">
+				<div class="inner">
 
 							<!-- Header -->
-								<header id="header">
-									<a href="/" class="logo"><strong>AI Clinical Notes Automation System</strong> by !Nerds</a>
-								</header>
+					<header id="header">
+						<a href="/" class="logo"><strong>AI Clinical Notes Automation System</strong> by !Nerds</a>
+					</header>
 
 							<!-- Content -->
-								<section>
-									<header class="main">
-										<h2>Note Detail</h2>
-									</header>
-										<div class="table-wrapper">
-											<h3>Patient Information</h3>
-											<table cellpadding="6">
-												<tr><th>Age</th><td>{{ patient_info.age }}</td></tr>
-												<tr><th>Sex</th><td>{{ patient_info.sex }}</td></tr>
-											</table>
+					<section>
+						<header class="main">
+							<h2>Note Detail</h2>
+						</header>
 
-											<h3>Admissions</h3>
-											<table cellpadding="6">
-												<tr>
-													<th>Reason</th>
-													<th>Date</th>
-													<th>Duration</th>
-													<th>Care Center</th>
-												</tr>
-												{% for a in admissions %}
-												<tr>
-													<td>{{ a.reason }}</td>
-													<td>{{ a.date }}</td>
-													<td>{{ a.duration }}</td>
-													<td>{{ a.care_center_details }}</td>
-												</tr>
-												{% endfor %}
-											</table>
+						<div class="table-wrapper">
 
-											<h3>Symptoms</h3>
-											<table cellpadding="6">
-												<tr>
-													<th>Name</th>
-													<th>Intensity</th>
-													<th>Location</th>
-													<th>Time</th>
-													<th>Trigger</th>
-												</tr>
-												{% for s in symptoms %}
-												<tr>
-													<td>{{ s.name_of_symptom }}</td>
-													<td>{{ s.intensity }}</td>
-													<td>{{ s.location }}</td>
-													<td>{{ s.time }}</td>
-													<td>{{ s.behaviours_affecting }}</td>
-												</tr>
-												{% endfor %}
-											</table>
+							<!-- VISIT INFORMATION -->
+							<h3>Visit Information</h3>
+							<table cellpadding="6">
+								<tr><th>Visit ID</th><td>{{ visit.visit_id }}</td></tr>
+								<tr><th>Date</th><td>{{ visit.visit_date }}</td></tr>
+								<tr><th>Reason</th><td>{{ visit.visit_reason }}</td></tr>
+								<tr><th>Care Center</th><td>{{ visit.care_center_details }}</td></tr>
+							</table>
 
-											<h3>Treatments</h3>
-											<table cellpadding="6">
-												<tr>
-													<th>Name</th>
-													<th>Condition</th>
-													<th>Dosage</th>
-													<th>Frequency</th>
-													<th>Reaction</th>
-												</tr>
-												{% for t in treatments %}
-												<tr>
-													<td>{{ t.name }}</td>
-													<td>{{ t.related_condition }}</td>
-													<td>{{ t.dosage }}</td>
-													<td>{{ t.frequency }}</td>
-													<td>{{ t.reaction_to_treatment }}</td>
-												</tr>
-												{% endfor %}
-											</table>
 
-											<h3>Discharge</h3>
-											<table cellpadding="6">
-												<tr><th>Reason</th><td>{{ discharge.reason }}</td></tr>
-												<tr><th>Referral</th><td>{{ discharge.referral }}</td></tr>
-												<tr><th>Follow Up</th><td>{{ discharge.follow_up }}</td></tr>
-												<tr><th>Summary</th><td>{{ discharge.discharge_summary }}</td></tr>
-											</table>
-										</div>
-									</section>
+							<!-- PATIENT INFORMATION -->
+							<h3>Patient Information</h3>
+							<table cellpadding="6">
+								<tr><th>Name</th><td>{{ patient_info.full_name }}</td></tr>
+								<tr><th>Age</th><td>{{ patient_info.age }}</td></tr>
+								<tr><th>Sex</th><td>{{ patient_info.sex }}</td></tr>
+							</table>
 
+
+							<!-- PATIENT MEDICAL HISTORY -->
+							<h3>Medical History</h3>
+							<table cellpadding="6">
+								<tr><th>Past Conditions</th><td>{{ medical_history.past_conditions }}</td></tr>
+								<tr><th>Chronic Diseases</th><td>{{ medical_history.chronic_diseases }}</td></tr>
+								<tr><th>Allergies</th><td>{{ medical_history.allergies }}</td></tr>
+								<tr><th>Medications</th><td>{{ medical_history.medications }}</td></tr>
+							</table>
+
+
+							<!-- SURGERIES -->
+							<h3>Surgeries</h3>
+							<table cellpadding="6">
+								<tr>
+									<th>Type</th>
+									<th>Reason</th>
+									<th>Date</th>
+								</tr>
+								{% for s in surgeries %}
+								<tr>
+									<td>{{ s.surgery_type }}</td>
+									<td>{{ s.surgery_reason }}</td>
+									<td>{{ s.procedure_datetime }}</td>
+								</tr>
+								{% endfor %}
+							</table>
+
+
+							<!-- SYMPTOMS -->
+							<h3>Symptoms (This Visit)</h3>
+							<table cellpadding="6">
+								    <tr>
+										<th>Name</th>
+										<th>Intensity</th>
+										<th>Location</th>
+										<th>Duration</th>
+										<th>Details</th>
+									</tr>
+									{% for s in symptoms %}
+									<tr>
+										<td>{{ s.symptom_name }}</td>
+										<td>{{ s.intensity }}</td>
+										<td>{{ s.location }}</td>
+										<td>{{ s.duration }}</td>
+										<td>{{ s.additional_details }}</td>
+									</tr>
+									{% endfor %}
+							</table>
+
+							<h3>Treatments</h3>
+							<table cellpadding="6">
+								<tr>
+									<th>Name</th>
+									<th>Condition</th>
+									<th>Dosage</th>
+									<th>Frequency</th>
+									<th>Reaction</th>
+								</tr>
+								{% for t in treatments %}
+								<tr>
+									<td>{{ t.treatment_name }}</td>
+									<td>{{ t.related_condition }}</td>
+									<td>{{ t.dosage }}</td>
+									<td>{{ t.frequency }}</td>
+									<td>{{ t.reaction_to_treatment }}</td>
+								</tr>
+								{% endfor %}
+							</table>
 						</div>
-					</div>
+					</section>
 
-				<!-- Sidebar -->
-					<div id="sidebar">
-						<div class="inner">
+				</div>
+			</div>
+
+			<!-- Sidebar -->
+			<div id="sidebar">
+				<div class="inner">
 							<!-- Menu -->
-								<nav id="menu">
-									<header class="major">
-										<h2>Menu</h2>
-									</header>
-									<ul>
-										<li><a href="../">Homepage</a></li>
-										<li><a href="../notes">Notes</a></li>
-										<li><a href="../elements">Elements</a></li>
+					<nav id="menu">
+						<header class="major">
+							<h2>Menu</h2>
+						</header>
+						<ul>
+							<li><a href="../">Homepage</a></li>
+							<li><a href="../notes">Notes</a></li>
+							<li><a href="../elements">Elements</a></li>
 										<li>
 											<span class="opener">Submenu</span>
 											<ul>
@@ -129,24 +147,24 @@
 												<li><a href="#">Feugiat Veroeros</a></li>
 											</ul>
 										</li>
-									</ul>
-								</nav>
-							<!-- Footer -->
-								<footer id="footer">
+						</ul>
+					</nav>
+
+					<footer id="footer">
 									<p class="copyright">&copy; Untitled. All rights reserved. Demo Images: <a href="https://unsplash.com">Unsplash</a>. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-								</footer>
+					</footer>
 
-						</div>
-					</div>
-
+				</div>
 			</div>
 
+		</div>
+
 		<!-- Scripts -->
-			<script src="../static/js/jquery.min.js"></script>
-			<script src="../static/js/browser.min.js"></script>
-			<script src="../static/js/breakpoints.min.js"></script>
-			<script src="../static/js/util.js"></script>
-			<script src="../static/js/main.js"></script>
+		<script src="../static/js/jquery.min.js"></script>
+		<script src="../static/js/browser.min.js"></script>
+		<script src="../static/js/breakpoints.min.js"></script>
+		<script src="../static/js/util.js"></script>
+		<script src="../static/js/main.js"></script>
 
 	</body>
 </html>
