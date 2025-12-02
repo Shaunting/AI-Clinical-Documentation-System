@@ -83,7 +83,7 @@
     form.append("audio", window._lastRecordedBlob, filename);
 
     try {
-      const resp = await fetch("/pipeline/upload", {
+      const resp = await fetch("/pipeline/process", {
         method: "POST",
         body: form
       });

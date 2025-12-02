@@ -118,63 +118,74 @@ def upload_audio():
 
     transcript = transcribe_audio(audio_file)
 
+    print("\n=== TRANSCRIPT START ===")
+    print(transcript)
+    print("=== TRANSCRIPT END ===\n")
+
     return jsonify({"status": "ok", "transcript": transcript})
 
 
-@bp.route("/upload", methods=["POST"])
-def upload_audio_test():
-    audio_file = request.files.get("audio")
+# @bp.route("/upload", methods=["POST"])
+# def upload_audio_test():
+#     audio_file = request.files.get("audio")
 
-    if not audio_file:
-        return {"error": "No audio uploaded"}, 400
+#     if not audio_file:
+#         return {"error": "No audio uploaded"}, 400
 
-    # Save into the uploads folder inside your project
-    upload_folder = current_app.config["UPLOAD_FOLDER"]
-    save_path = os.path.join(upload_folder, audio_file.filename)
+#     # Save into the uploads folder inside your project
+#     upload_folder = current_app.config["UPLOAD_FOLDER"]
+#     save_path = os.path.join(upload_folder, audio_file.filename)
 
-    audio_file.save(save_path)
+#     audio_file.save(save_path)
 
-    return {
-        "status": "ok",
-        "message": "Audio received successfully",
-        "saved_to": save_path,
-        "filename": audio_file.filename,
-        "content_type": audio_file.content_type,
-    }
+#     return {
+#         "status": "ok",
+#         "message": "Audio received successfully",
+#         "saved_to": save_path,
+#         "filename": audio_file.filename,
+#         "content_type": audio_file.content_type,
+#     }
 
 
-@bp.route("/process", methods=["POST", "GET"])
+@bp.route("/process", methods=["POST"])
 def pipeline_process():
     # -----------------------------------------
-    # 1. Voice to transcript(text)
+    # 1. Voice to transcript (Whisper)
     # -----------------------------------------
-    transcript = transcript_no_roles
+    audio_file = request.files.get("audio")
+    if not audio_file:
+        return jsonify({"error": "No audio uploaded"}), 400
+
+    transcript = transcribe_audio(audio_file)
+    if not transcript.strip():
+        return jsonify({"error": "Transcription failed"}), 400
 
     # -----------------------------------------
-    # 2. Insert conversation into database
+    # 2. Insert conversation text
     # -----------------------------------------
-    print("inserting conversation............")
+    print("Inserting conversation...")
     conversation_id = insert_conversation(transcript)
 
     # -----------------------------------------
-    # 3. Generate summary for conversation
+    # 3. Generate summary (text-only)
     # -----------------------------------------
-    print("generating conversation summary ............")
-    summary = generate_summary(transcript)
+    print("Generating conversation summary...")
+    summary_dict = generate_summary(transcript)
+    summary_text = summary_dict.get("summary", "")
 
-    print("inserting conversation summary ............")
-    summary_id = insert_conversation_summary(conversation_id, summary)
+    print("Inserting conversation summary...")
+    summary_id = insert_conversation_summary(conversation_id, summary_text)
 
     # -----------------------------------------
-    # 4. Generate structured json summary
+    # 4. Generate structured JSON summary
     # -----------------------------------------
-    print("genrating structured to json summary............")
+    print("Generating structured JSON summary...")
     structured_json = generate_structured_summary(transcript)
 
     # -----------------------------------------
-    # 5. Insert json summary into database
+    # 5. Insert structured JSON into database
     # -----------------------------------------
-    print("insert raw summary............")
+    print("Inserting raw summary...")
     structured_id = insert_raw_summary(
         conversation_id=conversation_id,
         transcript=transcript,
@@ -182,10 +193,11 @@ def pipeline_process():
     )
 
     # -----------------------------------------
-    # 6. Insert tables from json structured output
+    # 6. Insert normalized tables
     # -----------------------------------------
-    print("insert normalized tables............")
-    structured_output = structured_json.get("structured_output", {})
+    print("Inserting normalized tables...")
+    structured_output = structured_json.get("structured_output") or {}
+
     normalized = insert_normalize_summary(
         conversation_id, structured_id, structured_output
     )
