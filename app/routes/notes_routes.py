@@ -11,20 +11,14 @@ def notes():
         cursor.execute("""
             SELECT v.visit_id, p.age, p.sex,
                 (
-                    SELECT a.date 
-                    FROM admissions a 
-                    WHERE a.visit_id = v.visit_id 
-                    ORDER BY a.date DESC LIMIT 1
-                ) AS latest_admission_date,
-                (
                     SELECT t.related_condition 
                     FROM treatments t 
                     WHERE t.visit_id = v.visit_id 
                     LIMIT 1
                 ) AS primary_diagnosis
-            FROM visits v
-            LEFT JOIN patient_information p 
-                ON p.visit_id = v.visit_id
+            FROM visit v
+            LEFT JOIN patient p 
+                ON p.patient_id = v.patient_id
             ORDER BY v.visit_id ASC;
         """)
         notes_list = cursor.fetchall()
@@ -37,16 +31,13 @@ def notes():
 def note_detail(visit_id):
     conn = get_conn()
     with conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM visits WHERE visit_id=%s", (visit_id,))
+        cursor.execute("SELECT * FROM visit WHERE visit_id=%s", (visit_id,))
         visit = cursor.fetchone()
 
         cursor.execute(
             "SELECT * FROM patient_information WHERE visit_id=%s", (visit_id,)
         )
         patient_info = cursor.fetchone()
-
-        cursor.execute("SELECT * FROM admissions WHERE visit_id=%s", (visit_id,))
-        admissions = cursor.fetchall()
 
         cursor.execute("SELECT * FROM symptoms WHERE visit_id=%s", (visit_id,))
         symptoms = cursor.fetchall()
@@ -63,7 +54,6 @@ def note_detail(visit_id):
         "note.html",
         visit=visit,
         patient_info=patient_info,
-        admissions=admissions,
         symptoms=symptoms,
         treatments=treatments,
         discharge=discharge,
