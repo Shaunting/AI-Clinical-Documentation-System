@@ -40,12 +40,57 @@ Doctor: I'll also instruct you on follow-up requirements.
 Patient: Okay, thank you, doctor."""
 
 
+transcript_no_roles = """
+Good morning, what brings you to the Outpatient department today?
+Good morning, I have some discomfort in my neck and lower back, and I'm not able to maintain an erect posture.
+
+Please tell my about yourself.
+I'm 27, female, asian, and my name is sarah. I'm 150lbs and 5 foot 7. 
+
+Hmm, okay. Can you tell me more about the discomfort?
+I tend to fall on either side when I stand up from a sitting position, and my head is always turned to the right and upwards.
+
+Are you experiencing any pain in your neck?
+Yes, I have pain and discomfort in my neck.
+
+Okay. And what about your back?
+There is a sideways bending in my lumbar region. To counter the abnormal positioning of my back and neck, I have to keep my limbs in a specific position to allow my body weight to be supported.
+
+Does this restriction of body movements affect your daily life?
+Yes, I need assistance in standing and walking, and my parents have to help me with my daily chores, including all activities of self-care.
+
+How long have you been experiencing these difficulties?
+I've been experiencing these difficulties for the past four months since I was introduced to olanzapine tablets for the control of my exacerbated mental illness.
+
+And you've been diagnosed with bipolar affective disorder, correct?
+Yes, I was diagnosed with bipolar affective disorder seven years ago.
+
+And you've been taking olanzapine for your mental illness for seven years, correct?
+Yes. My first episode of the affective disorder was mania when I was eleven, and I've been taking olanzapine tablets in 2.5-10 mg doses per day at different times.
+
+So, you developed pain and discomfort in your neck within the second week of being put on olanzapine at a dose of 5 mg per day, correct?
+Yes, that's correct. The sustained and abnormal contraction of my neck muscles pulls my head to the right in an upward direction.
+
+And these features have persisted for the first three years of your illness with varying intensity, distress, and dysfunction, correct?
+Yes, the intensity, distress, and dysfunction tend to correlate with the dose of olanzapine.
+
+Apart from a brief period of around three weeks when you were given trihexyphenidyl 4 mg per day for rigidity in your upper limbs, you were not prescribed any other psychotropic medication, correct?
+Yes, that's correct. The rigidity showed good response to trihexyphenidyl 4 mg per day.
+
+I'm going to order some tests and then I'll be able to give you a proper diagnosis.
+Okay.
+
+I'll also instruct you on follow-up requirements.
+Okay, thank you.
+"""
+
+
 # -----------------------------------------------------------
 # Input transcript in prompt
 # -----------------------------------------------------------
 @bp.route("/generate", methods=["GET"])
 def generate_summary_route():
-    transcript = test_transcript
+    transcript = transcript_no_roles
 
     result = generate_structured_summary(transcript)
 
