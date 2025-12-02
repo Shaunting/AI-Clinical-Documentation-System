@@ -71,9 +71,10 @@ uploadBtn.addEventListener("click", async () => {
   uploadBtn.disabled = true;
 
   const form = new FormData();
-  form.append("consent", consentCheckbox.checked ? "on" : "");
   const filename = `recording_${Date.now()}.webm`;
+  const patientId = document.getElementById("patient_id").value; 
   form.append("audio", window._lastRecordedBlob, filename);
+  form.append("patient_id", patientId);
 
   try {
     const resp = await fetch("/upload", {
@@ -87,11 +88,11 @@ uploadBtn.addEventListener("click", async () => {
     }
 
     const data = await resp.json();
-    status.textContent = "Server Response: " + JSON.stringify(data);
+    // status.textContent = "Server Response: " + JSON.stringify(data);
   } catch (err) {
     console.error(err);
     alert("Upload Failed: " + err.message);
-    status.textContent = "Upload Failed.";
+    // status.textContent = "Upload Failed.";
   } finally {
     uploadBtn.disabled = false;
   }

@@ -33,13 +33,22 @@
 											<p>AI consultations recording clinical notes</p>
 										</header>
 										<p>This AI-powered system records your patient consultation, analyzes the conversation in real time, and automatically generates accurate, structured clinical notes to help streamline documentation and improve clinical workflow.</p>
-										<ul class="actions">
-											<li><button class="button primary" id="recordBtn">Record</a></li>
-											<li><button class="button primary" id="stopBtn">Stop</a></li>
-											<li><button class="button primary" id="playBtn">Play</a></li>
-											<li><button class="button primary" id="uploadBtn">Upload</a></li>
-										</ul>
-										<audio id="audioPlayback" controls></audio>
+										<div class="row gtr-uniform">
+											<div class="col-11">
+												<input type="text" name="patient_id" id="patient_id" value="" placeholder="Patient ID (if visited before)" />
+											</div>
+											<div>
+												<ul class="actions">
+													<li><button class="button primary" id="recordBtn">Record</a></li>
+													<li><button class="button primary" id="stopBtn">Stop</a></li>
+													<li><button class="button primary" id="playBtn">Play</a></li>
+													<li><button class="button primary" id="uploadBtn">Upload</a></li>
+												</ul>
+											</div>
+											<div>
+												<audio id="audioPlayback" controls></audio>
+											</div>
+										</div>
 									</div>
 									<span class="image object">
 										<img src="static/images/pic10.jpg" alt="" />
