@@ -60,17 +60,7 @@ def note_detail(visit_id):
                        (visit_id,))
         treatments = cursor.fetchall()
 
-        # 7. Conversation Raw
-        cursor.execute("SELECT * FROM conversation WHERE conversation_id = %s",
-                       (visit['conversation_id'],))
-        conversation = cursor.fetchone()
-
-        # 8. Structured Summary Raw
-        cursor.execute("SELECT * FROM structured_summary_raw WHERE conversation_id = %s",
-                       (visit['conversation_id'],))
-        structured_summary = cursor.fetchone()
-
-        # 9. Final Summary
+        # 7. Conversation Summary
         cursor.execute("SELECT * FROM conversation_summary WHERE conversation_id = %s",
                        (visit['conversation_id'],))
         final_summary = cursor.fetchone()
@@ -85,7 +75,5 @@ def note_detail(visit_id):
         surgeries=surgeries_list,
         symptoms=symptoms,
         treatments=treatments,
-        conversation=conversation,
-        structured_summary=structured_summary,
         final_summary=final_summary,
     )
