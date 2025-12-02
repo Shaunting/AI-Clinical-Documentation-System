@@ -9,17 +9,16 @@ def notes():
     conn = get_conn()
     with conn.cursor() as cursor:
         cursor.execute("""
-            SELECT v.visit_id, p.age, p.sex,
-                (
-                    SELECT t.related_condition 
-                    FROM treatments t 
-                    WHERE t.visit_id = v.visit_id 
-                    LIMIT 1
-                ) AS primary_diagnosis
-            FROM visit v
-            LEFT JOIN patient p 
-                ON p.patient_id = v.patient_id
-            ORDER BY v.visit_id ASC;
+                    SELECT 
+                        v.visit_id,
+                        p.full_name,
+                        p.age,
+                        p.sex,
+                        v.visit_date,
+                        v.visit_reason
+                    FROM visit v
+                    LEFT JOIN patient p ON v.patient_id = p.patient_id
+                    ORDER BY v.visit_id DESC
         """)
         notes_list = cursor.fetchall()
 
