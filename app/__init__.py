@@ -11,6 +11,12 @@ def create_app():
 
     app = Flask(__name__, template_folder="templates", static_folder="static")
 
+    # Absolute path to your uploads folder
+    upload_path = os.path.join(os.path.dirname(app.root_path), "uploads")
+    os.makedirs(upload_path, exist_ok=True)
+
+    app.config["UPLOAD_FOLDER"] = upload_path
+
     from .routes.web_routes import bp as web_bp
     from .routes.pipeline_routes import bp as pipeline_bp
     from .routes.notes_routes import bp as notes_bp

@@ -8,6 +8,7 @@ app = Flask(__name__)
 # Whisper 모델 로드 (tiny/small/base/medium 등 선택)
 model = whisper.load_model("base")
 
+
 @app.route("/upload", methods=["POST"])
 def upload():
     # 1) check the consent
@@ -15,7 +16,7 @@ def upload():
     if consent != "on":
         return jsonify({"error": "Consent not given"}), 400
 
-    # 2) check if there's a file 
+    # 2) check if there's a file
     if "audio" not in request.files:
         return jsonify({"error": "No audio file"}), 400
 
@@ -31,9 +32,7 @@ def upload():
         result = model.transcribe(temp_path, fp16=False)
         transcript = result.get("text", "")
 
-        return jsonify({
-            "text": transcript
-        })
+        return jsonify({"text": transcript})
 
     finally:
         # 5) remove the temp

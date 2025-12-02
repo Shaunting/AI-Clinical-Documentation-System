@@ -1,4 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, request, jsonify, current_app
+from app.services.whisper_service import transcribe_audio
+
+import os
 from app.services.gemini import generate_structured_summary, generate_summary
 from app.services.db_service import (
     insert_raw_summary,
@@ -107,6 +110,39 @@ def generate_summary_route():
     return result
 
 
+@bp.route("/upload", methods=["POST"])
+def upload_audio():
+    audio_file = request.files.get("audio")
+    if not audio_file:
+        return jsonify({"error": "No audio uploaded"}), 400
+
+    transcript = transcribe_audio(audio_file)
+
+    return jsonify({"status": "ok", "transcript": transcript})
+
+
+@bp.route("/upload", methods=["POST"])
+def upload_audio_test():
+    audio_file = request.files.get("audio")
+
+    if not audio_file:
+        return {"error": "No audio uploaded"}, 400
+
+    # Save into the uploads folder inside your project
+    upload_folder = current_app.config["UPLOAD_FOLDER"]
+    save_path = os.path.join(upload_folder, audio_file.filename)
+
+    audio_file.save(save_path)
+
+    return {
+        "status": "ok",
+        "message": "Audio received successfully",
+        "saved_to": save_path,
+        "filename": audio_file.filename,
+        "content_type": audio_file.content_type,
+    }
+
+
 @bp.route("/process", methods=["POST", "GET"])
 def pipeline_process():
     # -----------------------------------------
@@ -130,13 +166,13 @@ def pipeline_process():
     summary_id = insert_conversation_summary(conversation_id, summary)
 
     # -----------------------------------------
-    # 3. Generate structured json summary
+    # 4. Generate structured json summary
     # -----------------------------------------
     print("genrating structured to json summary............")
     structured_json = generate_structured_summary(transcript)
 
     # -----------------------------------------
-    # 4. Insert json summary into database
+    # 5. Insert json summary into database
     # -----------------------------------------
     print("insert raw summary............")
     structured_id = insert_raw_summary(
@@ -146,7 +182,7 @@ def pipeline_process():
     )
 
     # -----------------------------------------
-    # 5. Insert tables from json structured output
+    # 6. Insert tables from json structured output
     # -----------------------------------------
     print("insert normalized tables............")
     structured_output = structured_json.get("structured_output", {})
