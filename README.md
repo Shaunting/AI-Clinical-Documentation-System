@@ -129,38 +129,13 @@ Future improvements include:
 
 ---
 
-## Academic Context
-
-This project was developed as part of a database systems course and applies core concepts including:
-
-* Entity relationship modeling
-* Normalization and relational design
-* SQL based data integrity enforcement
-* End to end system integration
-
-It serves as a practical demonstration of how AI systems benefit from strong database foundations.
-
----
-
 ## Contributors
-
+* Shaun Ting
 * Jisun Kim
 * Woochang Shin
 * Jeonghyo Kim
-* Shaun Ting
-
-University of Minnesota
 
 ---
 
 ## License
-
 This project is for academic and educational purposes.
-
----
-
-If you want, next we can:
-
-* Tighten this for a recruiter focused repo
-* Add an architecture diagram section
-* Write a shorter README for public visibility and keep this as `README_full.md`
