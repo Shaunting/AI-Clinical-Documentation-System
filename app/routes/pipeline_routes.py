@@ -152,6 +152,7 @@ def pipeline_process():
     # -----------------------------------------
     # 1. Voice to transcript (Whisper)
     # -----------------------------------------
+    print("Transcribing conversation...")
     audio_file = request.files.get("audio")
     if not audio_file:
         return jsonify({"error": "No audio uploaded"}), 400
