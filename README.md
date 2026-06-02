@@ -1,8 +1,22 @@
-# AI Clinical Notes Documentation System
+# AI Clinical Documentation System
 
-An end to end AI powered system that converts raw doctor patient conversations into structured, machine readable clinical notes using speech recognition, large language models, and a normalized relational database.
+An end-to-end AI-powered system that converts raw doctor–patient conversations into structured, machine-readable clinical notes using speech recognition, large language models, and a normalized relational database.
+
+**Spring 2026 CSCI 5541 NLP — Class Project, University of Minnesota**
+
+**Shaun Ting · Jisun Kim · Woochang Shin · Jeonghyo Kim**
+
+[Code](https://github.com/Shaunting/ai-clinical-doc-system) · [Demo video](docs/files/Demo%20Video.mov) · [Project site](https://shaunting.github.io/ai-clinical-doc-system/)
 
 This project demonstrates how modern AI models can be orchestrated with database design principles to reduce clinical documentation burden while preserving data integrity and downstream usability.
+
+---
+
+## Demo
+
+<video controls src="docs/files/Demo%20Video.mov" width="100%"></video>
+
+End-to-end walkthrough: record a consultation in the browser, transcribe with Whisper, structure the visit with Gemini, and persist normalized clinical data to PostgreSQL.
 
 ---
 
