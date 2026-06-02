@@ -2,33 +2,23 @@
 
 An end-to-end AI-powered system that converts raw doctor–patient conversations into structured, machine-readable clinical notes using speech recognition, large language models, and a normalized relational database.
 
-**Spring 2026 CSCI 5541 NLP — Class Project, University of Minnesota**
+**Spring 2026 CSCI 5707 Principles of Database Systems — University of Minnesota**
 
 **Shaun Ting · Jisun Kim · Woochang Shin · Jeonghyo Kim**
 
-[Code](https://github.com/Shaunting/ai-clinical-doc-system) · [Demo video](docs/files/demo.mp4) · [Project site](https://shaunting.github.io/ai-clinical-doc-system/)
+[Code](https://github.com/Shaunting/ai-clinical-doc-system) · [Demo video](docs/files/Demo%20Video.mp4) · [Project site](https://shaunting.github.io/ai-clinical-doc-system/)
 
 This project demonstrates how modern AI models can be orchestrated with database design principles to reduce clinical documentation burden while preserving data integrity and downstream usability.
+
+Before running locally, copy `.env.example` to `.env` and add your credentials.
 
 ---
 
 ## Demo
 
-<video controls src="docs/files/demo.mp4" width="100%"></video>
+<video controls src="docs/files/Demo%20Video.mp4" width="100%"></video>
 
 End-to-end walkthrough: record a consultation in the browser, transcribe with Whisper, structure the visit with Gemini, and persist normalized clinical data to PostgreSQL.
-
----
-
-## Environment variables
-
-Copy `.env.example` to `.env` and set:
-
-- `GEMINI_API_KEY` — Google Gemini API key  
-- `DATABASE_URL` — Neon PostgreSQL connection string  
-- `FLASK_SECRET` — Flask session secret (optional for local dev)
-
-Do not commit `.env`. If keys were ever pushed to GitHub, rotate them in the Neon and Google Cloud consoles.
 
 ---
 
