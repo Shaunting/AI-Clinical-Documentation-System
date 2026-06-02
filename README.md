@@ -16,7 +16,8 @@ Before running locally, copy `.env.example` to `.env` and add your credentials.
 
 ## Demo
 
-<video controls src="docs/files/Demo%20Video.mp4" width="100%"></video>
+<video controls src="d<img width="1200" height="708" alt="demo" src="https://github.com/user-attachments/assets/cffdd534-ea06-43a0-a236-d33a354a884c" />
+ocs/files/Demo%20Video.mp4" width="100%"></video>
 
 End-to-end walkthrough: record a consultation in the browser, transcribe with Whisper, structure the visit with Gemini, and persist normalized clinical data to PostgreSQL.
 
