@@ -6,7 +6,7 @@ An end-to-end AI-powered system that converts raw doctor–patient conversations
 
 **Shaun Ting · Jisun Kim · Woochang Shin · Jeonghyo Kim**
 
-[Code](https://github.com/Shaunting/ai-clinical-doc-system) · [Demo video](docs/files/Demo%20Video.mp4) · [Project site](https://shaunting.github.io/ai-clinical-doc-system/)
+[Code](https://github.com/Shaunting/AI-Clinical-Documentation-System) · [Project site](https://shaunting.github.io/AI-Clinical-Documentation-System/)
 
 This project demonstrates how modern AI models can be orchestrated with database design principles to reduce clinical documentation burden while preserving data integrity and downstream usability.
 
@@ -16,7 +16,7 @@ Before running locally, copy `.env.example` to `.env` and add your credentials.
 
 ## Demo
 
-<video controls src="docs/files/Demo%20Video.mp4" width="100%"></video>
+![demo video](./docs/screenshots/demo.gif)
 
 End-to-end walkthrough: record a consultation in the browser, transcribe with Whisper, structure the visit with Gemini, and persist normalized clinical data to PostgreSQL.
 
