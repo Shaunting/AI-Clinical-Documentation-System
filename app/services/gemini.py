@@ -5,7 +5,21 @@ import os, json
 # -----------------------------------------------------------
 # GEMINI CLIENT
 # -----------------------------------------------------------
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+def _gemini_client():
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY is not set. Copy .env.example to .env and add your key.")
+    return genai.Client(api_key=api_key)
+
+
+client = None  # lazy init via get_client()
+
+
+def get_client():
+    global client
+    if client is None:
+        client = _gemini_client()
+    return client
 
 
 # -----------------------------------------------------------
@@ -125,7 +139,7 @@ def generate_structured_summary(transcript: str):
     Takes a transcript string and returns structured JSON from Gemini.
     """
 
-    response = client.models.generate_content(
+    response = get_client().models.generate_content(
         model="gemini-2.5-flash",
         contents=(
             "Use the function `generate_structured_clinical_summary` to extract "
@@ -179,7 +193,7 @@ def generate_summary(transcript: str):
         f"Transcript:\n{transcript}"
     )
 
-    response = client.models.generate_content(
+    response = get_client().models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt,
         config=summary_config,

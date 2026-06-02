@@ -1,0 +1,22 @@
+# Environment (API keys, database URLs)
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.Python
+*.egg-info/
+dist/
+build/
+
+# App runtime
+uploads/
+processed/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/

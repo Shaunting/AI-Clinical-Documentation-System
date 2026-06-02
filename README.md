@@ -6,7 +6,7 @@ An end-to-end AI-powered system that converts raw doctor–patient conversations
 
 **Shaun Ting · Jisun Kim · Woochang Shin · Jeonghyo Kim**
 
-[Code](https://github.com/Shaunting/ai-clinical-doc-system) · [Demo video](docs/files/Demo%20Video.mov) · [Project site](https://shaunting.github.io/ai-clinical-doc-system/)
+[Code](https://github.com/Shaunting/ai-clinical-doc-system) · [Demo video](docs/files/demo.mp4) · [Project site](https://shaunting.github.io/ai-clinical-doc-system/)
 
 This project demonstrates how modern AI models can be orchestrated with database design principles to reduce clinical documentation burden while preserving data integrity and downstream usability.
 
@@ -14,9 +14,21 @@ This project demonstrates how modern AI models can be orchestrated with database
 
 ## Demo
 
-<video controls src="docs/files/Demo%20Video.mov" width="100%"></video>
+<video controls src="docs/files/demo.mp4" width="100%"></video>
 
 End-to-end walkthrough: record a consultation in the browser, transcribe with Whisper, structure the visit with Gemini, and persist normalized clinical data to PostgreSQL.
+
+---
+
+## Environment variables
+
+Copy `.env.example` to `.env` and set:
+
+- `GEMINI_API_KEY` — Google Gemini API key  
+- `DATABASE_URL` — Neon PostgreSQL connection string  
+- `FLASK_SECRET` — Flask session secret (optional for local dev)
+
+Do not commit `.env`. If keys were ever pushed to GitHub, rotate them in the Neon and Google Cloud consoles.
 
 ---
 

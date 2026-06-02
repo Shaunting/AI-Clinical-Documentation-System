@@ -2,8 +2,6 @@ import os
 import psycopg
 from app.services.db_service import get_conn
 
-print("DATABASE_URL =", os.getenv("DATABASE_URL"))
-
 conn = get_conn()
 
 with conn.cursor() as cur:

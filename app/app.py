@@ -15,7 +15,7 @@ os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
+app.secret_key = os.environ.get("FLASK_SECRET") or os.urandom(24).hex()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
@@ -52,11 +52,11 @@ def extract_structure_from_transcript(transcript):
 
 def get_db_connection():
     return pymysql.connect(
-        host="localhost",
-        user="root",
-        password="12345678",
-        database="clinic",
-        cursorclass=pymysql.cursors.DictCursor
+        host=os.environ.get("MYSQL_HOST", "localhost"),
+        user=os.environ.get("MYSQL_USER", "root"),
+        password=os.environ.get("MYSQL_PASSWORD", ""),
+        database=os.environ.get("MYSQL_DATABASE", "clinic"),
+        cursorclass=pymysql.cursors.DictCursor,
     )
 
 # routes
